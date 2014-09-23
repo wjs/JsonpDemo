@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jsonp Demo</title>
+  <script src="/jquery.min.js"></script>
+  <script src="http://127.0.0.1:3001/jquery.min.js"></script>
+</head>
+<body>
+  <h1>Jsonp Demo</h1>
+  <button id="normalAjaxBtn">直接请求跨域文件或json会出错，看console的log</button><br>
+  <button id="getJsonpBtn">通过jsonp获取，看console的log</button><br>
+  <button id="jqueryGetJsonpBtn">用jquery方法获取jsonp</button>
+
+  <script>
+  $('#normalAjaxBtn').click(function() {
+    $.get('http://127.0.0.1:3001/jquery.min.js', function(data) {
+      console.log(data);
+    });
+    $.get('http://127.0.0.1:3001/somejson', function(data) {
+      console.log(data);
+    });
+  });
+
+  $('#getJsonpBtn').click(function() {
+    createScript('http://127.0.0.1:3001/somejson?callback=jsonpCallback');
+    
+  });
+
+  $('#jqueryGetJsonpBtn').click(function() {
+    $.ajax({
+      url: 'http://127.0.0.1:3001/somejson',
+      dataType: 'jsonp',
+      jsonp: 'callback',
+      success: function(data) {
+        console.log(data);
+      }
+    });
+  });
+
+  function createScript(src) {
+    $('<script><//script>').attr('src', src).appendTo('body');
+  }
+
+  function jsonpCallback(json) {
+    console.log(json);
+  }
+  </script>
+</body>
+</html>
